@@ -4,7 +4,7 @@ export const site = {
   name: "Rohollah Naeijian",
   // Surname as it appears in author lists; highlighted in publications.
   authorKey: "Naeijian",
-  role: "M.Sc. Researcher · Space Geodesy & Machine Learning",
+  role: "M.Sc. Researcher · Space Geodesy & Deep Learning",
   affiliationLine: "Chair of Space Geodesy, ETH Zürich · Politecnico di Milano",
   description:
     "Geoinformatics researcher working on deep learning for GNSS geodesy, Earth observation and geospatial data science.",
@@ -41,7 +41,7 @@ export const site = {
 
   interests: [
     { icon: "◎", title: "GNSS geodesy", text: "Loading signals, tropospheric delay, station time series" },
-    { icon: "∿", title: "Deep learning for time series", text: "Signal separation, transformers, distribution shift" },
+    { icon: "∿", title: "Deep learning", text: "Signal separation, transformers, distribution shift" },
     { icon: "▦", title: "Earth observation", text: "Sentinel-1/2, Landsat, MODIS, InSAR deformation" },
     { icon: "⌖", title: "Geospatial AI", text: "Foundation models and transferable representations" },
   ],
