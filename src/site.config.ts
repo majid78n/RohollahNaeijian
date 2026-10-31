@@ -15,6 +15,8 @@ export const site = {
   // Put the PDF at public/cv.pdf and set this to "/cv.pdf" to show the button.
   cv: null as string | null,
   status: "Open to PhD positions",
+  // Search Console ownership token (the "content" value of Google's HTML-tag method).
+  googleSiteVerification: "c3PtMxqTpIvRKWjjQaU29cP6203fJ5YwqJWPoF2Um1c",
 
   links: [
     { label: "Google Scholar", href: "" },
