@@ -6,25 +6,53 @@ interface Props {
   project: CollectionEntry<"projects">;
 }
 const { id, data: p } = Astro.props.project;
+const href = withBase(`/projects/${id}/`);
 ---
 
-<article class="card">
-  <a class="cover" href={withBase(`/projects/${id}/`)} tabindex="-1" aria-hidden="true">
-    {
-      p.image ? (
-        <img src={withBase(p.image)} alt="" loading="lazy" decoding="async" width="640" height="360" />
-      ) : (
-        <span class="placeholder">{p.tags[0] ?? "project"}</span>
-      )
-    }
-  </a>
-  <div class="body">
-    <div class="eyebrow">{p.affiliation}</div>
-    <h3><a href={withBase(`/projects/${id}/`)}>{p.title}</a></h3>
-    <p>{p.summary}</p>
-    <ul class="tags">{p.tags.map((t) => <li class="tag">{t}</li>)}</ul>
-  </div>
-</article>
+{
+  p.locked ? (
+    <article class="card locked" aria-label={`${p.title} (work in progress, not yet available)`}>
+      <div class="cover">
+        {p.image ? (
+          <img src={withBase(p.image)} alt="" loading="lazy" decoding="async" width="640" height="360" />
+        ) : (
+          <span class="placeholder">{p.tags[0] ?? "project"}</span>
+        )}
+        <span class="lock" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4.5" y="10.5" width="15" height="10" rx="2.2" />
+            <path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" />
+            <circle cx="12" cy="15.5" r="1.3" fill="currentColor" stroke="none" />
+          </svg>
+          <b>Work in progress</b>
+          <small>Coming soon</small>
+        </span>
+      </div>
+      <div class="body">
+        <div class="eyebrow">{p.affiliation}</div>
+        <h3>{p.title}</h3>
+        <p>{p.summary}</p>
+        <ul class="tags">{p.tags.map((t) => <li class="tag">{t}</li>)}</ul>
+      </div>
+    </article>
+  ) : (
+    <article class="card">
+      <a class="cover" href={href} tabindex="-1" aria-hidden="true">
+        {p.image ? (
+          <img src={withBase(p.image)} alt="" loading="lazy" decoding="async" width="640" height="360" />
+        ) : (
+          <span class="placeholder">{p.tags[0] ?? "project"}</span>
+        )}
+      </a>
+      <div class="body">
+        <div class="eyebrow">{p.affiliation}</div>
+        <h3><a href={href}>{p.title}</a></h3>
+        <p>{p.summary}</p>
+        <ul class="tags">{p.tags.map((t) => <li class="tag">{t}</li>)}</ul>
+      </div>
+    </article>
+  )
+}
 
 <style>
   .card {
@@ -45,4 +73,20 @@ const { id, data: p } = Astro.props.project;
   h3 a::after { content: ""; position: absolute; inset: 0; }
   .card { position: relative; }
   p { font-size: 15px; margin: 6px 0 12px; }
+
+  /* Locked: listed but not clickable; the overlay appears on hover (always on touch screens). */
+  .locked { cursor: not-allowed; }
+  .locked:hover { transform: none; border-color: var(--line); }
+  .locked .cover { position: relative; }
+  .lock {
+    position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+    background: rgb(22 25 29 / .72); color: #fff; backdrop-filter: blur(3px);
+    opacity: 0; transition: opacity .2s;
+  }
+  .lock svg { transform: translateY(4px); transition: transform .2s; }
+  .lock b { font: 600 15px var(--mono); letter-spacing: .02em; }
+  .lock small { font: 12px var(--mono); opacity: .75; }
+  .locked:hover .lock { opacity: 1; }
+  .locked:hover .lock svg { transform: none; }
+  @media (hover: none) { .lock { opacity: 1; } .lock svg { transform: none; } }
 </style>

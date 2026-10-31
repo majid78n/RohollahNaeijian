@@ -7,7 +7,7 @@ import { withBase } from "../../lib/url";
 
 export const getStaticPaths = (async () => {
   const projects = await getProjects();
-  return projects.map((project) => ({ params: { id: project.id }, props: { project } }));
+  return projects.filter((p) => !p.data.locked).map((project) => ({ params: { id: project.id }, props: { project } }));
 }) satisfies GetStaticPaths;
 
 const { project } = Astro.props;

@@ -33,6 +33,7 @@ content:
           - { name: paper, label: Paper URL, type: string }
       - { name: featured, label: Show first on homepage, type: boolean, default: false }
       - { name: draft, label: Draft (hidden), type: boolean, default: false }
+      - { name: locked, label: Locked (listed, cannot be opened), type: boolean, default: false }
       - { name: body, label: Description, type: rich-text }
 
   - name: publications

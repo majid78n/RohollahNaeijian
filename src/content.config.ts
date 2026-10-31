@@ -39,6 +39,8 @@ const projects = defineCollection({
       .default({}),
     featured: z.boolean().default(false),
     draft: z.boolean().default(false),
+    // Listed with a lock overlay, but the detail page is not built.
+    locked: z.boolean().default(false),
   }),
 });
 

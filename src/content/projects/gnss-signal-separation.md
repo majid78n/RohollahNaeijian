@@ -5,6 +5,7 @@ affiliation: ETH Zürich · M.Sc. thesis
 date: 2026-07-01
 tags: [PyTorch, Transformers, GNSS]
 featured: true
+locked: true
 ---
 
 Thesis research at the Chair of Space Geodesy, ETH Zürich, supervised by Prof. Benedikt Soja, Dr. Betty Heller-Kaikov and Dr. Laura Crocetti.
