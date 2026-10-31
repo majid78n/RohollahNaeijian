@@ -6,6 +6,8 @@ date: 2026-07-01
 tags: [PyTorch, Transformers, GNSS]
 featured: true
 locked: true
+image: /images/projects/gnss-loading-deformation.jpg
+imageAlt: "Elastic deformation of the Earth driven by atmospheric, oceanic and hydrological loading, with the vertical displacement each causes at a GNSS station"
 ---
 
 Thesis research at the Chair of Space Geodesy, ETH Zürich, supervised by Prof. Benedikt Soja, Dr. Betty Heller-Kaikov and Dr. Laura Crocetti.
