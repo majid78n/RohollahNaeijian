@@ -24,10 +24,11 @@ export const site = {
   ],
 
   affiliations: [
-    // Shown left to right in the hero. `height` balances the logos' visual weight.
-    { name: "ETH Zürich", logo: "/images/logos/eth-zurich.svg", height: 30, href: "https://ethz.ch/" },
-    { name: "Chair of Space Geodesy, ETH Zürich", logo: "/images/logos/space-geodesy.png", height: 56, href: "https://space.igp.ethz.ch/" },
-    { name: "Politecnico di Milano", logo: "/images/logos/polimi.svg", height: 40, href: "https://www.polimi.it/" },
+    // Shown left to right in the hero. `height` balances the logos' visual weight;
+    // `mono` logos are single-colour and are drawn white in dark mode.
+    { name: "ETH Zürich", logo: "/images/logos/eth-zurich.svg", height: 30, mono: true, href: "https://ethz.ch/" },
+    { name: "Chair of Space Geodesy, ETH Zürich", logo: "/images/logos/space-geodesy-chair.png", height: 56, mono: false, href: "https://space.igp.ethz.ch/" },
+    { name: "Politecnico di Milano", logo: "/images/logos/polimi.svg", height: 40, mono: true, href: "https://www.polimi.it/" },
   ],
 
   highlight: {
