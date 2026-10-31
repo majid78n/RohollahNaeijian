@@ -10,7 +10,7 @@ export const site = {
     "Geoinformatics researcher working on deep learning for GNSS geodesy, Earth observation and geospatial data science.",
   location: "Zürich, Switzerland",
   // Path under /public, or null to show initials.
-  photo: "/images/profile.jpg" as string | null,
+  photo: "/images/portrait.jpg" as string | null,
   email: "rnaeijian@student.ethz.ch",
   // Put the PDF at public/cv.pdf and set this to "/cv.pdf" to show the button.
   cv: null as string | null,
