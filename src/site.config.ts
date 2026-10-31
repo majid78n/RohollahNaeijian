@@ -10,8 +10,8 @@ export const site = {
     "Geoinformatics researcher working on deep learning for GNSS geodesy, Earth observation and geospatial data science.",
   location: "Zürich, Switzerland",
   // Path under /public, or null to show initials.
-  photo: "/images/portrait.jpg" as string | null,
-  email: "rnaeijian@student.ethz.ch",
+  photo: "/images/rohollah-naeijian.jpg" as string | null,
+  email: "naeijianrohollah@gmail.com",
   // Put the PDF at public/cv.pdf and set this to "/cv.pdf" to show the button.
   cv: null as string | null,
   status: "Open to PhD positions",
@@ -24,8 +24,10 @@ export const site = {
   ],
 
   affiliations: [
-    { short: "ETH", name: "ETH Zürich", unit: "Chair of Space Geodesy", color: "#1f407a", href: "https://space.igp.ethz.ch/" },
-    { short: "PM", name: "Politecnico di Milano", unit: "M.Sc. Geoinformatics Eng.", color: "#5b7a96", href: "https://www.polimi.it/" },
+    // Shown left to right in the hero. `height` balances the logos' visual weight.
+    { name: "ETH Zürich", logo: "/images/logos/eth-zurich.svg", height: 30, href: "https://ethz.ch/" },
+    { name: "Chair of Space Geodesy, ETH Zürich", logo: "/images/logos/space-geodesy.png", height: 56, href: "https://space.igp.ethz.ch/" },
+    { name: "Politecnico di Milano", logo: "/images/logos/polimi.svg", height: 40, href: "https://www.polimi.it/" },
   ],
 
   highlight: {
