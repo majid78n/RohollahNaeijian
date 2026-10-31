@@ -1,0 +1,78 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { site } from "../site.config";
+import { doiUrl, withBase } from "../lib/url";
+
+interface Props {
+  items: CollectionEntry<"publications">[];
+}
+const { items } = Astro.props;
+const TYPE_ORDER = ["journal", "conference", "preprint", "talk", "thesis"] as const;
+const types = TYPE_ORDER.filter((t) => items.some((p) => p.data.type === t));
+const isMe = (author: string) => author.includes(site.authorKey);
+---
+
+<div class="filters" role="group" aria-label="Filter publications">
+  <button type="button" class="on" data-filter="all" aria-pressed="true">All</button>
+  {types.map((t) => <button type="button" data-filter={t} aria-pressed="false">{t}</button>)}
+</div>
+
+<div class="pubs">
+  {
+    items.map(({ data: p }) => (
+      <article class="item" data-type={p.type}>
+        <div class="when">{p.year}</div>
+        <div>
+          <h3><span class="badge">{p.type}</span>{p.title}</h3>
+          <p>
+            {p.authors.map((a, i) => (
+              <>
+                {isMe(a) ? <b class="me">{a}</b> : a}
+                {i < p.authors.length - 1 && ", "}
+              </>
+            ))}
+          </p>
+          <p class="meta">
+            {p.venue}
+            {p.status && <> · {p.status}</>}
+            {p.doi && <> · <a href={doiUrl(p.doi)} rel="noopener">DOI</a></>}
+            {p.url && <> · <a href={p.url} rel="noopener">Link</a></>}
+            {p.pdf && <> · <a href={withBase(p.pdf)}>PDF</a></>}
+          </p>
+        </div>
+      </article>
+    ))
+  }
+</div>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>(".filters [data-filter]");
+  const pubs = document.querySelectorAll<HTMLElement>(".pubs [data-type]");
+  for (const btn of buttons) {
+    btn.addEventListener("click", () => {
+      const f = btn.dataset.filter;
+      for (const b of buttons) {
+        b.classList.toggle("on", b === btn);
+        b.setAttribute("aria-pressed", String(b === btn));
+      }
+      for (const p of pubs) p.hidden = f !== "all" && p.dataset.type !== f;
+    });
+  }
+</script>
+
+<style>
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+  .filters button {
+    font: 13px var(--mono); text-transform: capitalize; background: none; border: 1px solid var(--line);
+    color: var(--ink); padding: 4px 12px; border-radius: 999px; cursor: pointer;
+  }
+  .filters button.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .item { display: grid; grid-template-columns: 130px 1fr; gap: 20px; padding: 18px 0; border-top: 1px solid var(--line); }
+  .item[hidden] { display: none; }
+  .when { font: 13px var(--mono); color: var(--muted); padding-top: 3px; }
+  p { margin: 4px 0 0; font-size: 16px; }
+  .me { text-decoration: underline; text-decoration-color: var(--mark); text-decoration-thickness: 3px; }
+  @media (max-width: 760px) {
+    .item { grid-template-columns: 1fr; gap: 2px; }
+  }
+</style>

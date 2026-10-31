@@ -1,0 +1,56 @@
+---
+import type { GetStaticPaths } from "astro";
+import { render } from "astro:content";
+import Page from "../../layouts/Page.astro";
+import { getProjects, formatMonth } from "../../lib/content";
+import { withBase } from "../../lib/url";
+
+export const getStaticPaths = (async () => {
+  const projects = await getProjects();
+  return projects.map((project) => ({ params: { id: project.id }, props: { project } }));
+}) satisfies GetStaticPaths;
+
+const { project } = Astro.props;
+const { data: p } = project;
+const { Content } = await render(project);
+const links = [
+  { label: "Code", href: p.links.code },
+  { label: "Live demo", href: p.links.demo },
+  { label: "Paper", href: p.links.paper },
+].filter((l): l is { label: string; href: string } => Boolean(l.href));
+---
+
+<Page title={p.title} description={p.summary}>
+  <article>
+    <div class="eyebrow">{p.affiliation} · {formatMonth(p.date)}</div>
+    <h1>{p.title}</h1>
+    <p class="lead">{p.summary}</p>
+    <ul class="tags">{p.tags.map((t) => <li class="tag">{t}</li>)}</ul>
+
+    {p.image && <img class="cover" src={withBase(p.image)} alt={p.imageAlt ?? ""} width="1280" height="720" />}
+
+    <div class="prose"><Content /></div>
+
+    {
+      links.length > 0 && (
+        <ul class="links">
+          {links.map((l) => <li><a href={l.href} rel="noopener">{l.label} ↗</a></li>)}
+        </ul>
+      )
+    }
+  </article>
+</Page>
+
+<style>
+  article { max-width: 760px; }
+  h1 { font-size: clamp(30px, 4.5vw, 44px); font-weight: 800; line-height: 1.15; margin: 6px 0 14px; }
+  .lead { font-size: 20px; margin: 0 0 16px; }
+  .cover { width: 100%; border-radius: var(--radius); border: 1px solid var(--line); margin: 28px 0; }
+  .prose { margin-top: 28px; }
+  .links { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+  .links a {
+    font: 600 14px var(--mono); color: var(--ink); text-decoration: none;
+    border: 1.5px solid var(--ink); border-radius: 999px; padding: 6px 16px; display: inline-block;
+  }
+  .links a:hover { background: var(--ink); color: var(--bg); }
+</style>

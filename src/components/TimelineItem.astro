@@ -1,0 +1,28 @@
+---
+interface Props {
+  when: string;
+  title: string;
+  meta?: string;
+  badge?: string;
+}
+const { when, title, meta, badge } = Astro.props;
+---
+
+<article class="item">
+  <div class="when">{when}</div>
+  <div>
+    <h3>{badge && <span class="badge">{badge}</span>}{title}</h3>
+    {meta && <p class="meta">{meta}</p>}
+    <div class="body"><slot /></div>
+  </div>
+</article>
+
+<style>
+  .item { display: grid; grid-template-columns: 130px 1fr; gap: 20px; padding: 18px 0; border-top: 1px solid var(--line); }
+  .when { font: 13px var(--mono); color: var(--muted); padding-top: 3px; }
+  p, .body { margin: 4px 0 0; font-size: 16px; }
+  .body :global(p) { margin: 0; }
+  @media (max-width: 760px) {
+    .item { grid-template-columns: 1fr; gap: 2px; }
+  }
+</style>

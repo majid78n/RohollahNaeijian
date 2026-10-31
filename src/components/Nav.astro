@@ -1,0 +1,55 @@
+---
+interface Props {
+  items: { id: string; label: string }[];
+  /** Prefix for links, e.g. the home URL when used on a sub-page. */
+  hrefPrefix?: string;
+}
+const { items, hrefPrefix = "" } = Astro.props;
+---
+
+<div class="navbar">
+  <nav aria-label="Sections">
+    {items.map((i) => <a href={`${hrefPrefix}#${i.id}`} data-section={i.id}>{i.label}</a>)}
+  </nav>
+</div>
+
+<script>
+  // Highlight the link of the section currently in view.
+  const links = [...document.querySelectorAll<HTMLAnchorElement>(".navbar a[data-section]")];
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        for (const a of links) {
+          const active = a.dataset.section === entry.target.id;
+          a.classList.toggle("on", active);
+          if (active) a.setAttribute("aria-current", "true");
+          else a.removeAttribute("aria-current");
+        }
+      }
+    },
+    { rootMargin: "-40% 0px -55% 0px" },
+  );
+  for (const a of links) {
+    const section = document.getElementById(a.dataset.section!);
+    if (section) observer.observe(section);
+  }
+</script>
+
+<style>
+  .navbar { position: sticky; top: 12px; z-index: 10; display: flex; justify-content: center; margin: 26px 16px 0; }
+  nav {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 2px; padding: 6px; max-width: 100%;
+    background: color-mix(in srgb, var(--card) 88%, transparent); backdrop-filter: blur(8px);
+    border: 1px solid var(--line); border-radius: 999px; box-shadow: 0 4px 18px rgb(0 0 0 / 6%);
+  }
+  a { font: 600 14px var(--mono); color: var(--ink); text-decoration: none; padding: 7px 14px; border-radius: 999px; white-space: nowrap; }
+  a:hover { background: var(--line); }
+  a.on { background: var(--ink); color: var(--bg); }
+
+  @media (max-width: 760px) {
+    .navbar { top: 6px; }
+    nav { flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; scrollbar-width: none; }
+    a { padding: 6px 10px; font-size: 13px; }
+  }
+</style>

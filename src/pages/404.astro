@@ -1,0 +1,14 @@
+---
+import Page from "../layouts/Page.astro";
+import { withBase } from "../lib/url";
+---
+
+<Page title="Page not found">
+  <div class="eyebrow">404</div>
+  <h1>This station has no signal.</h1>
+  <p>The page you were looking for doesn't exist. <a href={withBase("/")}>Back to the homepage →</a></p>
+</Page>
+
+<style>
+  h1 { font-size: clamp(30px, 5vw, 48px); font-weight: 800; margin: 6px 0 14px; }
+</style>

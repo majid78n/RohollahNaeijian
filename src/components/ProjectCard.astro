@@ -1,0 +1,48 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { withBase } from "../lib/url";
+
+interface Props {
+  project: CollectionEntry<"projects">;
+}
+const { id, data: p } = Astro.props.project;
+---
+
+<article class="card">
+  <a class="cover" href={withBase(`/projects/${id}/`)} tabindex="-1" aria-hidden="true">
+    {
+      p.image ? (
+        <img src={withBase(p.image)} alt="" loading="lazy" decoding="async" width="640" height="360" />
+      ) : (
+        <span class="placeholder">{p.tags[0] ?? "project"}</span>
+      )
+    }
+  </a>
+  <div class="body">
+    <div class="eyebrow">{p.affiliation}</div>
+    <h3><a href={withBase(`/projects/${id}/`)}>{p.title}</a></h3>
+    <p>{p.summary}</p>
+    <ul class="tags">{p.tags.map((t) => <li class="tag">{t}</li>)}</ul>
+  </div>
+</article>
+
+<style>
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    overflow: hidden; display: flex; flex-direction: column; transition: transform .15s, border-color .15s;
+  }
+  .card:hover { transform: translateY(-3px); border-color: var(--ink); }
+  @media (prefers-reduced-motion: reduce) { .card:hover { transform: none; } }
+  .cover { display: block; aspect-ratio: 16 / 9; background: var(--line); }
+  .cover img { width: 100%; height: 100%; object-fit: cover; }
+  .placeholder {
+    width: 100%; height: 100%; display: grid; place-items: center; font: 12px var(--mono); color: var(--muted);
+    background: repeating-linear-gradient(45deg, var(--line) 0 10px, transparent 10px 20px);
+  }
+  .body { padding: 16px 18px 18px; }
+  .eyebrow { font-size: 11px; }
+  h3 a { color: var(--ink); text-decoration: none; }
+  h3 a::after { content: ""; position: absolute; inset: 0; }
+  .card { position: relative; }
+  p { font-size: 15px; margin: 6px 0 12px; }
+</style>

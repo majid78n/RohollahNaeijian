@@ -1,0 +1,109 @@
+# Admin panel configuration for Pages CMS (https://pagescms.org).
+# Sign in there with GitHub, pick this repository, and these forms appear.
+# Every save is a normal git commit, which triggers a rebuild of the site.
+
+media:
+  input: public/images
+  output: /images
+
+content:
+  - name: projects
+    label: Projects
+    type: collection
+    path: src/content/projects
+    filename: "{fields.title}.md"
+    view:
+      fields: [title, date, featured]
+      sort: [date]
+      default: { sort: date, order: desc }
+    fields:
+      - { name: title, label: Title, type: string, required: true }
+      - { name: summary, label: One-line summary, type: text, required: true }
+      - { name: affiliation, label: Where (e.g. ETH Zürich), type: string, required: true }
+      - { name: date, label: Date, type: date, required: true }
+      - { name: image, label: Cover image, type: image }
+      - { name: imageAlt, label: Image description (accessibility), type: string }
+      - { name: tags, label: Tags, type: string, list: true }
+      - name: links
+        label: Links
+        type: object
+        fields:
+          - { name: code, label: Code URL, type: string }
+          - { name: demo, label: Demo URL, type: string }
+          - { name: paper, label: Paper URL, type: string }
+      - { name: featured, label: Show first on homepage, type: boolean, default: false }
+      - { name: draft, label: Draft (hidden), type: boolean, default: false }
+      - { name: body, label: Description, type: rich-text }
+
+  - name: publications
+    label: Publications
+    type: collection
+    path: src/content/publications
+    filename: "{year}-{fields.title}.md"
+    view:
+      fields: [title, year, type]
+      default: { sort: year, order: desc }
+    fields:
+      - { name: title, label: Title, type: string, required: true }
+      - { name: authors, label: Authors (one per line, e.g. "Naeijian, R."), type: string, list: true, required: true }
+      - { name: venue, label: Journal / conference, type: string, required: true }
+      - { name: year, label: Year, type: number, required: true }
+      - name: type
+        label: Type
+        type: select
+        required: true
+        options:
+          values: [journal, conference, talk, preprint, thesis]
+      - { name: status, label: Status (e.g. under review), type: string }
+      - { name: doi, label: DOI (without https://doi.org/), type: string }
+      - { name: url, label: Link, type: string }
+      - { name: pdf, label: PDF, type: file }
+      - { name: featured, label: Featured, type: boolean, default: false }
+
+  - name: news
+    label: News
+    type: collection
+    path: src/content/news
+    filename: "{year}-{month}-{fields.title}.md"
+    view:
+      fields: [title, date]
+      default: { sort: date, order: desc }
+    fields:
+      - { name: title, label: Headline, type: string, required: true }
+      - { name: date, label: Date, type: date, required: true }
+      - { name: link, label: Link (optional), type: string }
+
+  - name: experience
+    label: Experience & awards
+    type: collection
+    path: src/content/experience
+    view:
+      fields: [title, period, category]
+    fields:
+      - { name: title, label: Title, type: string, required: true }
+      - { name: organization, label: Organization, type: string }
+      - name: category
+        label: Category
+        type: select
+        required: true
+        options:
+          values: [research, teaching, industry, award, service]
+      - { name: period, label: Period shown (e.g. 2022 – 2023), type: string, required: true }
+      - { name: start, label: Start date (for sorting), type: date, required: true }
+      - { name: location, label: Location, type: string }
+      - { name: body, label: Description, type: rich-text }
+
+  - name: education
+    label: Education
+    type: collection
+    path: src/content/education
+    view:
+      fields: [degree, period]
+    fields:
+      - { name: degree, label: Degree, type: string, required: true }
+      - { name: institution, label: Institution, type: string, required: true }
+      - { name: period, label: Period shown, type: string, required: true }
+      - { name: start, label: Start date (for sorting), type: date, required: true }
+      - { name: location, label: Location, type: string }
+      - { name: details, label: Details (GPA, supervisor…), type: string }
+      - { name: body, label: Description, type: rich-text }

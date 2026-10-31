@@ -1,0 +1,21 @@
+---
+interface Props {
+  id: string;
+  index: number;
+  eyebrow: string;
+  title: string;
+}
+const { id, index, eyebrow, title } = Astro.props;
+---
+
+<section id={id} aria-labelledby={`${id}-title`}>
+  <div class="eyebrow">{String(index).padStart(2, "0")} · {eyebrow}</div>
+  <h2 id={`${id}-title`}>{title}</h2>
+  <slot />
+</section>
+
+<style>
+  section { padding: 56px 0 8px; }
+  h2 { font-size: 30px; font-weight: 800; margin: 4px 0 22px; }
+  h2::after { content: ""; display: block; width: 48px; height: 3px; background: var(--mark); margin-top: 10px; }
+</style>

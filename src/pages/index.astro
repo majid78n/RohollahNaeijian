@@ -1,0 +1,164 @@
+---
+import { render } from "astro:content";
+import Base from "../layouts/Base.astro";
+import Hero from "../components/Hero.astro";
+import Nav from "../components/Nav.astro";
+import Section from "../components/Section.astro";
+import Publications from "../components/Publications.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import TimelineItem from "../components/TimelineItem.astro";
+import Footer from "../components/Footer.astro";
+import { site } from "../site.config";
+import { withBase } from "../lib/url";
+import { getEducation, getExperience, getNews, getProjects, getPublications, formatMonth } from "../lib/content";
+
+const HOME_PROJECTS = 6;
+
+const [publications, projects, news, education, experience] = await Promise.all([
+  getPublications(),
+  getProjects(),
+  getNews(),
+  getEducation(),
+  getExperience(),
+]);
+
+const renderAll = <T extends Parameters<typeof render>[0]>(items: T[]) =>
+  Promise.all(items.map(async (item) => ({ item, Content: (await render(item)).Content })));
+
+const [educationR, experienceR] = await Promise.all([renderAll(education), renderAll(experience)]);
+
+const sections = [
+  { id: "about", label: "About" },
+  { id: "interests", label: "Interests" },
+  { id: "publications", label: "Publications" },
+  { id: "projects", label: "Projects" },
+  { id: "education", label: "Education" },
+  { id: "experience", label: "Experience" },
+  { id: "news", label: "News" },
+];
+const n = (id: string) => sections.findIndex((s) => s.id === id) + 1;
+---
+
+<Base>
+  <Hero />
+  <Nav items={sections} />
+
+  <main id="main" class="wrap">
+    <Section id="about" index={n("about")} eyebrow="About" title="About me">
+      <div class="about">
+        <div class="prose">
+          <p>
+            I'm a geoinformatics researcher working at the intersection of <b>space geodesy, machine learning and geospatial
+            data science</b>.
+          </p>
+          <p>
+            My thesis research at the <b>Chair of Space Geodesy, ETH Zürich</b> develops deep neural networks that separate
+            superimposed geophysical loading signals (atmospheric, oceanic and hydrological) from noise in global GNSS station
+            time series, combining data-driven learning with physically derived environmental information.
+          </p>
+          <p>
+            Before that, I worked on GNSS tropospheric delay modelling, InSAR deformation monitoring and Earth-observation
+            machine learning at Politecnico di Milano and Babol Noshirvani University of Technology.
+          </p>
+        </div>
+        <aside>
+          {
+            site.highlight && (
+              <div class="side">
+                <div class="eyebrow">{site.highlight.label}</div>
+                <a href="#news"><b>{site.highlight.title}</b></a>
+                <br />
+                {site.highlight.detail}
+              </div>
+            )
+          }
+          <div class="side">
+            <div class="eyebrow">Currently</div>
+            {site.location}
+            {site.status && <><br />{site.status}</>}
+          </div>
+        </aside>
+      </div>
+    </Section>
+
+    <Section id="interests" index={n("interests")} eyebrow="Interests" title="Research interests">
+      <ul class="interests">
+        {
+          site.interests.map((i) => (
+            <li class="interest">
+              <div class="ic" aria-hidden="true">{i.icon}</div>
+              <h3>{i.title}</h3>
+              <p>{i.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </Section>
+
+    <Section id="publications" index={n("publications")} eyebrow="Publications" title="Publications & talks">
+      <Publications items={publications} />
+    </Section>
+
+    <Section id="projects" index={n("projects")} eyebrow="Projects" title="Selected projects">
+      <div class="grid">
+        {projects.slice(0, HOME_PROJECTS).map((p) => <ProjectCard project={p} />)}
+      </div>
+      {
+        projects.length > HOME_PROJECTS && (
+          <p class="more"><a href={withBase("/projects/")}>All {projects.length} projects →</a></p>
+        )
+      }
+    </Section>
+
+    <Section id="education" index={n("education")} eyebrow="Education" title="Education">
+      {
+        educationR.map(({ item: { data: e }, Content }) => (
+          <TimelineItem when={e.period} title={`${e.degree} — ${e.institution}`} meta={e.details}>
+            <Content />
+          </TimelineItem>
+        ))
+      }
+    </Section>
+
+    <Section id="experience" index={n("experience")} eyebrow="Experience" title="Research, teaching & honours">
+      {
+        experienceR.map(({ item: { data: x }, Content }) => (
+          <TimelineItem when={x.period} title={x.title} meta={x.organization} badge={x.category}>
+            <Content />
+          </TimelineItem>
+        ))
+      }
+    </Section>
+
+    <Section id="news" index={n("news")} eyebrow="News" title="News">
+      {
+        news.map(({ data: item }) => (
+          <TimelineItem when={formatMonth(item.date)} title={item.title}>
+            {item.link && <a href={withBase(item.link)}>Read more →</a>}
+          </TimelineItem>
+        ))
+      }
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .about { display: grid; grid-template-columns: 1fr 280px; gap: 40px; align-items: start; }
+  .side { border-left: 2px solid var(--mark); padding: 2px 0 6px 20px; font: 14px/1.6 var(--mono); }
+  .side .eyebrow { font-size: 12px; margin-bottom: 4px; }
+  .side + .side { margin-top: 20px; }
+
+  .interests { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; list-style: none; padding: 0; margin: 0; }
+  .interest { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; }
+  .ic { font: 800 20px var(--mono); color: var(--accent); }
+  .interest p { margin: 4px 0 0; font-size: 15px; color: var(--muted); }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; }
+  .more { font: 600 15px var(--mono); margin-top: 18px; }
+
+  @media (max-width: 760px) {
+    .about { grid-template-columns: 1fr; gap: 24px; }
+  }
+</style>

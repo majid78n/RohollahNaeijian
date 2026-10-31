@@ -1,0 +1,34 @@
+---
+// Layout for sub-pages: compact header with a link back home.
+import Base from "./Base.astro";
+import Footer from "../components/Footer.astro";
+import { site } from "../site.config";
+import { withBase } from "../lib/url";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description } = Astro.props;
+---
+
+<Base title={title} description={description}>
+  <header class="top wrap">
+    <a class="home" href={withBase("/")}>← {site.name}</a>
+    <nav aria-label="Site">
+      <a href={withBase("/projects/")}>Projects</a>
+      <a href={withBase("/#publications")}>Publications</a>
+    </nav>
+  </header>
+  <main id="main" class="wrap">
+    <slot />
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  .top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; padding-top: 28px; padding-bottom: 12px; }
+  a { font: 600 14px var(--mono); color: var(--ink); text-decoration: none; }
+  a:hover { color: var(--accent); }
+  nav { display: flex; gap: 18px; }
+</style>
